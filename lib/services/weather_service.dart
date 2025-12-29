@@ -4,95 +4,100 @@ import '../models/weather.dart';
 import '../models/forecast.dart';
 
 class WeatherService {
-  // ⚠️ REPLACE THIS WITH YOUR ACTUAL API KEY FROM OPENWEATHERMAP
-  static const String _apiKey = 'your api key here';
+  static const String _apiKey = 'f94600e7d3c69dbe28aee692e1b292c1';
   static const String _baseUrl = 'https://api.openweathermap.org/data/2.5';
 
-  // Fetch current weather by city name
+  // ================= CURRENT WEATHER BY CITY =================
   Future<Weather> getCurrentWeatherByCity(String cityName) async {
     try {
+      if (cityName.trim().isEmpty) {
+        throw Exception('City name is empty');
+      }
+
       final url = Uri.parse(
         '$_baseUrl/weather?q=$cityName&appid=$_apiKey&units=metric',
       );
 
       final response = await http.get(url);
+      final data = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
         return Weather.fromJson(data);
-      } else if (response.statusCode == 404) {
-        throw Exception('City not found. Please check the city name.');
       } else {
-        throw Exception('Failed to load weather data');
+        throw Exception(data['message'] ?? 'Weather error');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      rethrow; // ✅ VERY IMPORTANT
     }
   }
 
-  // Fetch current weather by coordinates
+  // ================= CURRENT WEATHER BY LOCATION =================
   Future<Weather> getCurrentWeatherByLocation(
-    double latitude,
-    double longitude,
-  ) async {
+      double latitude,
+      double longitude,
+      ) async {
     try {
       final url = Uri.parse(
         '$_baseUrl/weather?lat=$latitude&lon=$longitude&appid=$_apiKey&units=metric',
       );
 
       final response = await http.get(url);
+      final data = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
         return Weather.fromJson(data);
       } else {
-        throw Exception('Failed to load weather data');
+        throw Exception(data['message'] ?? 'Weather error');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      rethrow;
     }
   }
 
-  // Fetch 5-day forecast by city name
+  // ================= FORECAST BY CITY =================
   Future<Forecast> getForecastByCity(String cityName) async {
     try {
+      if (cityName.trim().isEmpty) {
+        throw Exception('City name is empty');
+      }
+
       final url = Uri.parse(
         '$_baseUrl/forecast?q=$cityName&appid=$_apiKey&units=metric',
       );
 
       final response = await http.get(url);
+      final data = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
         return Forecast.fromJson(data);
       } else {
-        throw Exception('Failed to load forecast data');
+        throw Exception(data['message'] ?? 'Forecast error');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      rethrow;
     }
   }
 
-  // Fetch 5-day forecast by coordinates
+  // ================= FORECAST BY LOCATION =================
   Future<Forecast> getForecastByLocation(
-    double latitude,
-    double longitude,
-  ) async {
+      double latitude,
+      double longitude,
+      ) async {
     try {
       final url = Uri.parse(
         '$_baseUrl/forecast?lat=$latitude&lon=$longitude&appid=$_apiKey&units=metric',
       );
 
       final response = await http.get(url);
+      final data = json.decode(response.body);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
         return Forecast.fromJson(data);
       } else {
-        throw Exception('Failed to load forecast data');
+        throw Exception(data['message'] ?? 'Forecast error');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      rethrow;
     }
   }
 }
