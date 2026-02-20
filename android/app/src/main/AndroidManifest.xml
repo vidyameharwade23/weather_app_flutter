@@ -5,7 +5,6 @@
    
    
    
-   
     <application
         android:label="weather_app"
         android:name="${applicationName}"
